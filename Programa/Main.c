@@ -4,6 +4,7 @@
 //Duan Espinoza 
 //Aaron Piñar
 #include <stdio.h>
+#include "funciones/manageUsers.h"
 
 // Estructuras para almacenar datos
 struct CatalogEntry {
@@ -94,8 +95,8 @@ int main() {
                             manageCatalog();
                             break;
                         case 2:
-                            manageUsers();
-                            break;
+                            helloks(); // Llamada a manageUsers.h 
+                            return 0;
                         case 3:
                             loanHistory();
                             break;
