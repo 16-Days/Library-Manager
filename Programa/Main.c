@@ -5,6 +5,7 @@
 //Aaron Piñar
 #include <stdio.h>
 #include "funciones/manageUsers.h"
+#include "json-c/json.h"
 
 // Estructuras para almacenar datos
 struct CatalogEntry {
@@ -95,8 +96,8 @@ int main() {
                             manageCatalog();
                             break;
                         case 2:
-                            helloks(); // Llamada a manageUsers.h 
-                            return 0;
+                            manageUsers();
+                            break;
                         case 3:
                             loanHistory();
                             break;
