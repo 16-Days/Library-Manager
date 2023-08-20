@@ -3,9 +3,10 @@
 //Estudiantes:
 //Duan Espinoza 
 //Aaron Piñar
+
 #include <stdio.h>
 #include "funciones/manageUsers.h"
-#include "json-c/json.h"
+//#include "json-c/json.h"
 
 // Estructuras para almacenar datos
 struct CatalogEntry {
