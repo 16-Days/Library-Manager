@@ -6,7 +6,8 @@
 
 #include <stdio.h>
 #include "funciones/manageUsers.h"
-//#include "json-c/json.h"
+#include "cJSON.h"
+
 
 // Estructuras para almacenar datos
 struct CatalogEntry {
