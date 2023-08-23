@@ -7,13 +7,14 @@
             "command": "gcc",
             "args": [
                 "-o",
-                "${workspaceFolder}/output",
+                "${workspaceFolder}/Programa/output/Main",
                 "${workspaceFolder}/Programa/Main.c",
+                "${workspaceFolder}/Programa/cJSON/cJSON.c",
                 "-I",
                 "${workspaceFolder}/Programa/cJSON",
-                "-L",
-                "${workspaceFolder}/Programa/cJSON",
-                "-lcjson"
+                "-I",
+                "${workspaceFolder}/Programa",
+                "-lm"
             ],
             "group": {
                 "kind": "build",

@@ -5,7 +5,7 @@
             "name": "Run Program",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/output",
+            "program": "${workspaceFolder}/Programa/output/Main",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

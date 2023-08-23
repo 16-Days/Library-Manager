@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cJSON.h" 
+#include "cJSON.h"
+
+
+ 
+// Declaración de la función validarUsuarioExistente
+int validarUsuarioExistente(int id);
+
 
 void crearArchivo(const char *nombre, int id, const char *direccion) {
     FILE *archivo;

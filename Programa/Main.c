@@ -37,8 +37,9 @@ void manageCatalog() {
     // Implementación para gestionar el catálogo
 }
 
+//llamada a manageUsers.h
 void manageUsers() {
-    // Implementación para gestionar los usuarios
+    register_User();
 }
 
 void loanHistory() {
@@ -73,24 +74,24 @@ int main() {
     int mainChoice, subChoice;
 
     do {
-        printf("\n--- Menú Principal ---\n");
+        printf("\n--- Menu Principal ---\n");
         printf("1. Opciones Operativas\n");
         printf("2. Opciones Generales\n");
         printf("3. Salir\n");
-        printf("Ingrese su elección: ");
+        printf("Ingrese su eleccion: ");
         scanf("%d", &mainChoice);
 
         switch (mainChoice) {
             case 1:
                 do {
                     printf("\n--- Opciones Operativas ---\n");
-                    printf("1. Gestión de catálogo\n");
-                    printf("2. Gestión de usuarios\n");
-                    printf("3. Historial de préstamos\n");
-                    printf("4. Vencimiento de préstamos\n");
-                    printf("5. Estadísticas\n");
+                    printf("1. Gestion de catalogo\n");
+                    printf("2. Gestion de usuarios\n");
+                    printf("3. Historial de prestamos\n");
+                    printf("4. Vencimiento de prestamos\n");
+                    printf("5. Estadisticas\n");
                     printf("6. Volver\n");
-                    printf("Ingrese su elección: ");
+                    printf("Ingrese su eleccion: ");
                     scanf("%d", &subChoice);
 
                     switch (subChoice) {
@@ -112,19 +113,19 @@ int main() {
                         case 6:
                             break;
                         default:
-                            printf("Opción no válida. Intente de nuevo.\n");
+                            printf("Opcion no valida. Intente de nuevo.\n");
                     }
                 } while (subChoice != 6);
                 break;
             case 2:
                 do {
                     printf("\n--- Opciones Generales ---\n");
-                    printf("1. Búsqueda simple\n");
-                    printf("2. Búsqueda avanzada\n");
-                    printf("3. Préstamo de ejemplar\n");
+                    printf("1. Busqueda simple\n");
+                    printf("2. Busqueda avanzada\n");
+                    printf("3. Prestamo de ejemplar\n");
                     printf("4. Devolución de ejemplar\n");
                     printf("5. Volver\n");
-                    printf("Ingrese su elección: ");
+                    printf("Ingrese su eleccion: ");
                     scanf("%d", &subChoice);
 
                     switch (subChoice) {
@@ -143,7 +144,7 @@ int main() {
                         case 5:
                             break;
                         default:
-                            printf("Opción no válida. Intente de nuevo.\n");
+                            printf("Opcion no valida. Intente de nuevo.\n");
                     }
                 } while (subChoice != 5);
                 break;
@@ -151,7 +152,7 @@ int main() {
                 printf("¡Hasta luego!\n");
                 break;
             default:
-                printf("Opción no válida. Intente de nuevo.\n");
+                printf("Opcion no valida. Intente de nuevo.\n");
         }
     } while (mainChoice != 3);
 
