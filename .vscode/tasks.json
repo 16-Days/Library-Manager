@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-o",
+                "${workspaceFolder}/output",
+                "${workspaceFolder}/Programa/Main.c",
+                "-I",
+                "${workspaceFolder}/Programa/cJSON",
+                "-L",
+                "${workspaceFolder}/Programa/cJSON",
+                "-lcjson"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

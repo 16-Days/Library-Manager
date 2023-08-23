@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Programa/json-c/include"
+                "${vcpkgRoot}/x86-windows/include",
+                "${workspaceFolder}/Programa/cJSON"
             ],
             "defines": [
                 "_DEBUG",
