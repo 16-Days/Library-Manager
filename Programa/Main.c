@@ -5,8 +5,10 @@
 //Aaron Piñar
 
 #include <stdio.h>
+//#include "funciones/manageCatalog.h"
 #include "funciones/manageUsers.h"
-#include "cJSON.h"
+
+//#include "cJSON.h"
 
 
 // Estructuras para almacenar datos
@@ -35,6 +37,7 @@ struct Loan {
 // Funciones para cada opción
 void manageCatalog() {
     // Implementación para gestionar el catálogo
+    //actualizaBaseLibros();
 }
 
 //llamada a manageUsers.h
