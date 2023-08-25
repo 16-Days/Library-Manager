@@ -11,7 +11,7 @@ int validarUsuarioExistente(int id);
 
 void crearArchivo(const char *nombre, int id, const char *direccion) {
     FILE *archivo;
-    archivo = fopen("data/user_Register.json", "a+");  // Cambia el nombre del archivo según tus necesidades
+    archivo = fopen("../data/user_Register.json", "a+");  // Cambia el nombre del archivo según tus necesidades
 
     if (archivo == NULL) {
         printf("No se pudo crear el archivo.\n");
@@ -57,7 +57,7 @@ int register_User() {
 // Función para validar si ya existe un usuario con la misma ID en el archivo JSON
 int validarUsuarioExistente(int id) {
     FILE *archivo;
-    archivo = fopen("data/user_Register.json", "r"); // Abre el archivo en modo lectura
+    archivo = fopen("../data/user_Register.json", "r"); // Abre el archivo en modo lectura
 
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
