@@ -37,7 +37,7 @@ struct Loan {
 // Funciones para cada opción
 void manageCatalog() {
     // Implementación para gestionar el catálogo
-    //actualizaBaseLibros();
+    actualizaBaseLibros();
 }
 
 //llamada a manageUsers.h

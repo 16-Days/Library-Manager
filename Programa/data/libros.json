@@ -1,0 +1,66 @@
+[
+  {
+    "titulo": "La sombra del viento",
+    "autor": "Carlos Ruiz Zafón",
+    "anio": 2001,
+    "genero": "Ficción",
+    "descripcion": "Una historia sobre un libro maldito",
+    "calificacion": 4.5
+  },
+  {
+    "titulo": "Cien años de soledad",
+    "autor": "Gabriel García Márquez",
+    "anio": 1967,
+    "genero": "Realismo mágico",
+    "descripcion": "La saga de la familia Buendía en Macondo",
+    "calificacion": 4.8
+  },
+  {
+    "titulo": "La sombra del viento",
+    "autor": "Carlos Ruiz Zafón",
+    "anio": 2001,
+    "genero": "Ficción",
+    "descripcion": "Una historia sobre un libro maldito",
+    "calificacion": 4.5
+  },
+  {
+    "titulo": "Cien años de soledad",
+    "autor": "Gabriel García Márquez",
+    "anio": 1967,
+    "genero": "Realismo mágico",
+    "descripcion": "La saga de la familia Buendía en Macondo",
+    "calificacion": 4.8
+  },
+  {
+    "titulo": "El nombre del viento",
+    "autor": "Patrick Rothfuss",
+    "anio": 2007,
+    "genero": "Fantasía",
+    "descripcion": "Las aventuras de Kvothe en busca de conocimiento",
+    "calificacion": 4.7
+  },
+  {
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "anio": 1949,
+    "genero": "Ciencia ficción",
+    "descripcion": "Un mundo totalitario y su lucha por la verdad",
+    "calificacion": 4.6
+  },
+  {
+    "titulo": "Harry Potter y la piedra filosofal",
+    "autor": "J.K. Rowling",
+    "anio": 1997,
+    "genero": "Fantasía",
+    "descripcion": "El inicio de las aventuras de Harry en Hogwarts",
+    "calificacion": 4.9
+  },
+  {
+    "titulo": "Los juegos del hambre",
+    "autor": "Suzanne Collins",
+    "anio": 2008,
+    "genero": "Ciencia ficción",
+    "descripcion": "Un futuro distópico y lucha por la supervivencia",
+    "calificacion": 4.3
+  }
+]

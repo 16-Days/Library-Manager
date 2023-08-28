@@ -8,7 +8,6 @@
 // Declaración de la función validarUsuarioExistente
 int validarUsuarioExistente(int id);
 
-
 void crearArchivo(const char *nombre, int id, const char *direccion) {
     FILE *archivo;
     archivo = fopen("../data/user_Register.json", "a+");  // Cambia el nombre del archivo según tus necesidades

@@ -14,23 +14,24 @@ struct Libro {
 
 int actualizaBaseLibros() {
     // Abrir el archivo para lectura
-    FILE *archivo = fopen("../data/registro.txt", "r");
+    FILE *archivo = fopen("../data/registro.txt", "r+");
     if (archivo == NULL) {
         perror("No se pudo abrir el archivo");
         return 1;
     }
 
     // Crear un arreglo de estructuras para almacenar los libros
-    struct Libro libros[10]; // Puedes ajustar el tamaño según la cantidad de libros en tu archivo
+    struct Libro libros[100]; // Puedes ajustar el tamaño según la cantidad de libros en tu archivo
 
     int contador = 0;
-    char linea[500]; // Asumiendo que cada línea tendrá menos de 500 caracteres
+    char linea[1000]; // Asumiendo que cada línea tendrá menos de 1000 caracteres
 
     // Leer el archivo línea por línea
     while (fgets(linea, sizeof(linea), archivo)) {
         // Utilizar strtok para dividir la línea en campos separados por '|'
         char *token = strtok(linea, "|");
         strcpy(libros[contador].titulo, token);
+        
 
         token = strtok(NULL, "|");
         strcpy(libros[contador].autor, token);
@@ -79,6 +80,9 @@ int actualizaBaseLibros() {
 
     // Cerrar el archivo JSON
     fclose(json_file);
+
+
+    printf ("\n\nSe Actualizo la base de datos de libros registrados\n\n");
 
     return 0;
 }
