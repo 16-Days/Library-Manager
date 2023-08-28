@@ -6,3 +6,5 @@ El nombre del viento|Patrick Rothfuss|2007|Fantasía|Las aventuras de Kvothe en 
 1984|George Orwell|1949|Ciencia ficción|Un mundo totalitario y su lucha por la verdad|4.6
 Harry Potter y la piedra filosofal|J.K. Rowling|1997|Fantasía|El inicio de las aventuras de Harry en Hogwarts|4.9
 Los juegos del hambre|Suzanne Collins|2008|Ciencia ficción|Un futuro distópico y lucha por la supervivencia|4.3
+Los juegos del hambre|Suzanne Collins|2008|Ciencia ficción|Un futuro distópico y lucha por la supervivencia|4.3
+Los juegos del susto|Suzanne Collins|2008|Ciencia ficción|Un futuro distópico y lucha por la supervivencia|4.3
