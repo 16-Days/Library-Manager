@@ -1,10 +1,9 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Definición de una estructura para almacenar los datos
 struct Libro {
+    int id; // Agregamos el campo ID
     char titulo[100];
     char autor[100];
     int anio;
@@ -14,25 +13,20 @@ struct Libro {
 };
 
 int actualizaBaseLibros() {
-    // Abrir el archivo para lectura
     FILE *archivo = fopen("../data/registro.txt", "r+");
     if (archivo == NULL) {
         perror("No se pudo abrir el archivo");
         return 1;
     }
 
-    // Crear un arreglo de estructuras para almacenar los libros
-    struct Libro libros[100]; // Puedes ajustar el tamaño según la cantidad de libros en tu archivo
-
+    struct Libro libros[100];
     int contador = 0;
-    char linea[1000]; // Asumiendo que cada línea tendrá menos de 1000 caracteres
+    char linea[1000];
 
-    // Leer el archivo línea por línea
     while (fgets(linea, sizeof(linea), archivo)) {
-        // Utilizar strtok para dividir la línea en campos separados por '|'
         char *token = strtok(linea, "|");
+        libros[contador].id = contador + 1; // Asignamos el ID autoincrementable
         strcpy(libros[contador].titulo, token);
-        
 
         token = strtok(NULL, "|");
         strcpy(libros[contador].autor, token);
@@ -52,10 +46,8 @@ int actualizaBaseLibros() {
         contador++;
     }
 
-    // Cerrar el archivo
     fclose(archivo);
 
-    // Crear y escribir el JSON
     FILE *json_file = fopen("../data/libros.json", "w");
     if (json_file == NULL) {
         perror("No se pudo crear el archivo JSON");
@@ -65,13 +57,14 @@ int actualizaBaseLibros() {
     fprintf(json_file, "[\n");
     for (int i = 0; i < contador; i++) {
         fprintf(json_file, "  {\n");
+        fprintf(json_file, "    \"id\": %d,\n", libros[i].id);
         fprintf(json_file, "    \"titulo\": \"%s\",\n", libros[i].titulo);
         fprintf(json_file, "    \"autor\": \"%s\",\n", libros[i].autor);
         fprintf(json_file, "    \"anio\": %d,\n", libros[i].anio);
         fprintf(json_file, "    \"genero\": \"%s\",\n", libros[i].genero);
         fprintf(json_file, "    \"descripcion\": \"%s\",\n", libros[i].descripcion);
-        fprintf(json_file, "    \"cantidad\": %d,\n", libros[i].cantidad); // Cambio de "calificacion" a "cantidad"
-        fprintf(json_file, "    \"estado\": true\n"); // Agregar la etiqueta "estado"
+        fprintf(json_file, "    \"cantidad\": %d,\n", libros[i].cantidad);
+        fprintf(json_file, "    \"estado\": true\n");
         if (i == contador - 1) {
             fprintf(json_file, "  }\n");
         } 
@@ -81,11 +74,11 @@ int actualizaBaseLibros() {
     }
     fprintf(json_file, "]\n");
 
-    // Cerrar el archivo JSON
     fclose(json_file);
-
 
     printf ("\n\nSe Actualizo la base de datos de libros registrados\n\n");
 
     return 0;
 }
+
+
