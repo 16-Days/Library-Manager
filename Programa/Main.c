@@ -132,7 +132,7 @@ int main() {
                     printf("1. Busqueda simple\n");
                     printf("2. Busqueda avanzada\n");
                     printf("3. Prestamo de ejemplar\n");
-                    printf("4. Devolución de ejemplar\n");
+                    printf("4. Devolucion de ejemplar\n");
                     printf("5. Volver\n");
                     printf("Ingrese su eleccion: ");
                     scanf("%d", &subChoice);
