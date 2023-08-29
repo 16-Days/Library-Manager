@@ -9,17 +9,8 @@ struct Libro {
     int anio;
     char genero[100];
     char descripcion[200];
-    float calificacion;
+    int cantidad;
 };
-
-int esDuplicado(struct Libro *libros, int contador, const char *titulo) {
-    for (int i = 0; i < contador; i++) {
-        if (strcmp(libros[i].titulo, titulo) == 0) {
-            return 1; // Libro encontrado, es un duplicado
-        }
-    }
-    return 0; // No se encontró un duplicado
-}
 
 int actualizaBaseLibros() {
     // Abrir el archivo para lectura
@@ -40,8 +31,22 @@ int actualizaBaseLibros() {
         // Utilizar strtok para dividir la línea en campos separados por '|'
         char *token = strtok(linea, "|");
         strcpy(libros[contador].titulo, token);
+        
 
-        // ... (código para el resto de los campos)
+        token = strtok(NULL, "|");
+        strcpy(libros[contador].autor, token);
+
+        token = strtok(NULL, "|");
+        libros[contador].anio = atoi(token);
+
+        token = strtok(NULL, "|");
+        strcpy(libros[contador].genero, token);
+
+        token = strtok(NULL, "|");
+        strcpy(libros[contador].descripcion, token);
+
+        token = strtok(NULL, "|");
+        libros[contador].cantidad = atof(token);
 
         contador++;
     }
@@ -49,8 +54,7 @@ int actualizaBaseLibros() {
     // Cerrar el archivo
     fclose(archivo);
 
-    // ... (código para crear el archivo JSON)
-
+    // Crear y escribir el JSON
     FILE *json_file = fopen("../data/libros.json", "w");
     if (json_file == NULL) {
         perror("No se pudo crear el archivo JSON");
@@ -59,20 +63,19 @@ int actualizaBaseLibros() {
 
     fprintf(json_file, "[\n");
     for (int i = 0; i < contador; i++) {
-        if (!esDuplicado(libros, i, libros[i].titulo)) { // Verificar si es un duplicado
-            fprintf(json_file, "  {\n");
-            fprintf(json_file, "    \"titulo\": \"%s\",\n", libros[i].titulo);
-            fprintf(json_file, "    \"autor\": \"%s\",\n", libros[i].autor);
-            fprintf(json_file, "    \"anio\": %d,\n", libros[i].anio);
-            fprintf(json_file, "    \"genero\": \"%s\",\n", libros[i].genero);
-            fprintf(json_file, "    \"descripcion\": \"%s\",\n", libros[i].descripcion);
-            fprintf(json_file, "    \"calificacion\": %.1f,\n", libros[i].calificacion);
-            fprintf(json_file, "    \"estado\": true\n"); // Agregar la etiqueta "estado" con valor "true"
-            if (i == contador - 1) {
-                fprintf(json_file, "  }\n");
-            } else {
-                fprintf(json_file, "  },\n");
-            }
+        fprintf(json_file, "  {\n");
+        fprintf(json_file, "    \"titulo\": \"%s\",\n", libros[i].titulo);
+        fprintf(json_file, "    \"autor\": \"%s\",\n", libros[i].autor);
+        fprintf(json_file, "    \"anio\": %d,\n", libros[i].anio);
+        fprintf(json_file, "    \"genero\": \"%s\",\n", libros[i].genero);
+        fprintf(json_file, "    \"descripcion\": \"%s\",\n", libros[i].descripcion);
+        fprintf(json_file, "    \"cantidad\": %d,\n", libros[i].cantidad); // Cambio de "calificacion" a "cantidad"
+        fprintf(json_file, "    \"estado\": true\n"); // Agregar la etiqueta "estado"
+        if (i == contador - 1) {
+            fprintf(json_file, "  }\n");
+        } 
+        else {
+            fprintf(json_file, "  },\n");
         }
     }
     fprintf(json_file, "]\n");
@@ -80,8 +83,8 @@ int actualizaBaseLibros() {
     // Cerrar el archivo JSON
     fclose(json_file);
 
+
     printf ("\n\nSe Actualizo la base de datos de libros registrados\n\n");
 
     return 0;
 }
-
