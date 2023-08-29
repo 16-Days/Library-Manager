@@ -64,7 +64,7 @@ void simpleSearch1() {
     scanf("%s", searchText);  // Lee el texto de búsqueda
 
     // Llama a la función simpleSearch() definida en simpleSearch.h
-    simpleSearch(searchText, "../data/libros.json");
+    simpleSearch(searchText, "../Programa/data/libros.json");
 }
 
 void advancedSearch() {
