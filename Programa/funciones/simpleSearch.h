@@ -1,5 +1,3 @@
-#ifndef SIMPLESEARCH_H
-#define SIMPLESEARCH_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -84,9 +82,9 @@ static inline void simpleSearch(const char *searchText, const char *filePath) {
             printf("Titulo: %s\n", titulo->valuestring);
             printf("Autor: %s\n", autor->valuestring);
             printf("Año: %d\n", anio->valueint);
-            printf("Género: %s\n", genero->valuestring);
+            printf("Genero: %s\n", genero->valuestring);
             printf("Descripción: %s\n", descripcion->valuestring);
-            printf("Calificación: %.2f\n", calificacion->valuedouble);
+            printf("Calificacion: %.2f\n", calificacion->valuedouble);
             printf("Estado: %s\n", estado->valueint ? "Disponible" : "No disponible");
             printf("\n");
 
@@ -95,10 +93,10 @@ static inline void simpleSearch(const char *searchText, const char *filePath) {
     }
 
     if (booksFound == 0) {
-        printf("No se encontraron libros que coincidan con la búsqueda.\n");
+        printf("No se encontraron libros que coincidan con la busqueda.\n");
     }
 
     cJSON_Delete(root);
 }
 
-#endif
+

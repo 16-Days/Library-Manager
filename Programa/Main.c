@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include "funciones/manageCatalog.h"
 #include "funciones/manageUsers.h"
-#include "simpleSearch.h"
+#include "funciones/simpleSearch.h"
+
 #include "cJSON.h"
 
 
@@ -59,7 +60,7 @@ void showStatistics() {
 
 void simpleSearch1() {
     char searchText[100];  // Texto de búsqueda ingresado por el usuario
-    printf("Ingrese el texto de búsqueda: ");
+    printf("Ingrese el texto de busqueda: ");
     scanf("%s", searchText);  // Lee el texto de búsqueda
 
     // Llama a la función simpleSearch() definida en simpleSearch.h
