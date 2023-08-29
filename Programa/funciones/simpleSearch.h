@@ -76,7 +76,7 @@ static inline void simpleSearch(const char *searchText, const char *filePath) {
             cJSON *anio = cJSON_GetObjectItem(book, "anio");
             cJSON *genero = cJSON_GetObjectItem(book, "genero");
             cJSON *descripcion = cJSON_GetObjectItem(book, "descripcion");
-            cJSON *calificacion = cJSON_GetObjectItem(book, "calificacion");
+            cJSON *cantidad = cJSON_GetObjectItem(book, "cantidad");
             cJSON *estado = cJSON_GetObjectItem(book, "estado");
 
             printf("Titulo: %s\n", titulo->valuestring);
@@ -84,7 +84,7 @@ static inline void simpleSearch(const char *searchText, const char *filePath) {
             printf("Año: %d\n", anio->valueint);
             printf("Genero: %s\n", genero->valuestring);
             printf("Descripción: %s\n", descripcion->valuestring);
-            printf("Calificacion: %.2f\n", calificacion->valuedouble);
+            printf("cantidad: %.2f\n", cantidad->valuedouble);
             printf("Estado: %s\n", estado->valueint ? "Disponible" : "No disponible");
             printf("\n");
 
