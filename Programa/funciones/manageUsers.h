@@ -1,96 +1,108 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include "cJSON.h"
 
+struct Usuario {
+    char nombre[100];
+    char cedula[20];
+    char correo[100];
+};
 
- 
-// Declaración de la función validarUsuarioExistente
-int validarUsuarioExistente(int id);
-
-void crearArchivo(const char *nombre, int id, const char *direccion) {
-    FILE *archivo;
-    archivo = fopen("../data/user_Register.json", "a+");  // Cambia el nombre del archivo según tus necesidades
-
-    if (archivo == NULL) {
-        printf("No se pudo crear el archivo.\n");
-        return;
+// Función para verificar si una cadena contiene solo dígitos y tiene exactamente 9 caracteres
+int validarCedula(const char *cedula) {
+    int len = strlen(cedula);
+    if (len != 9) {
+        return 0; // La cédula debe tener exactamente 9 dígitos
     }
-
-    fprintf(archivo, "{\n");
-    fprintf(archivo, "  \"Nombre\": \"%s\",\n", nombre);
-    fprintf(archivo, "  \"id\": %d,\n", id);
-    fprintf(archivo, "  \"Correo\": \"%s\"\n", direccion);
-    fprintf(archivo, "}\n");
-
-    fclose(archivo);
-    printf("Archivo JSON creado con éxito.\n");
+    for (int i = 0; i < len; i++) {
+        if (!isdigit(cedula[i])) {
+            return 0; // La cédula debe contener solo dígitos
+        }
+    }
+    return 1; // La cédula es válida
 }
 
-int register_User() {
-    char nombre[100];
-    int id;
-    char direccion[100];
-
+// Función para ingresar los datos del usuario
+void ingresarUsuario(struct Usuario *usuario) {
     printf("Ingrese el nombre: ");
-    scanf("%s", nombre);
+    scanf("%s", usuario->nombre);
 
-    printf("Ingrese el numero de identificación: ");
-    scanf("%d", &id);
+    char cedula[20];
+    do {
+        printf("Ingrese la cédula (9 dígitos): ");
+        scanf("%s", cedula);
+    } while (!validarCedula(cedula));
 
-    if (validarUsuarioExistente(id)) {
-        printf("Ya existe un usuario con la misma ID.\n");
-        return 0; // Termina la función sin crear el usuario
+    strcpy(usuario->cedula, cedula);
+
+    printf("Ingrese el correo: ");
+    scanf("%s", usuario->correo);
+}
+
+// Función para cargar la lista de usuarios desde el archivo JSON
+cJSON *cargarUsuariosDesdeArchivo(const char *rutaArchivo) {
+    FILE *fp = fopen(rutaArchivo, "r");
+    if (fp != NULL) {
+        fseek(fp, 0, SEEK_END);
+        long file_size = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        char *file_content = (char *)malloc(file_size + 1);
+        fread(file_content, 1, file_size, fp);
+        fclose(fp);
+
+        cJSON *root = cJSON_Parse(file_content);
+        free(file_content);
+
+        return root;
+    } else {
+        return NULL;
+    }
+}
+
+// Función para guardar la lista de usuarios en el archivo JSON
+void guardarUsuariosEnArchivo(const char *rutaArchivo, cJSON *root) {
+    FILE *fp = fopen(rutaArchivo, "w");
+    if (fp != NULL) {
+        char *json = cJSON_Print(root);
+        fputs(json, fp);
+        fclose(fp);
+        free(json);
+    }
+}
+
+int mainss() {
+    struct Usuario nuevoUsuario;
+    cJSON *root = NULL;
+
+    printf("Por favor, ingrese los datos del nuevo usuario:\n");
+    ingresarUsuario(&nuevoUsuario);
+
+    // Especificar la ruta completa al archivo JSON
+    const char *rutaArchivo = "../data/usuarios.json";
+
+    // Cargar la lista de usuarios existentes desde el archivo JSON
+    root = cargarUsuariosDesdeArchivo(rutaArchivo);
+
+    if (root == NULL) {
+        // Si el archivo JSON no existe o está vacío, crea un nuevo objeto JSON
+        root = cJSON_CreateArray();
     }
 
-    printf("Ingrese la dirección: ");
-    scanf("%s", direccion);
+    // Crear un objeto JSON para el nuevo usuario y agregarlo a la lista
+    cJSON *usuario = cJSON_CreateObject();
+    cJSON_AddStringToObject(usuario, "nombre", nuevoUsuario.nombre);
+    cJSON_AddStringToObject(usuario, "cedula", nuevoUsuario.cedula);
+    cJSON_AddStringToObject(usuario, "correo", nuevoUsuario.correo);
+    cJSON_AddItemToArray(root, usuario);
 
-    
-    crearArchivo(nombre, id, direccion);
+    // Guardar la lista actualizada de usuarios en el archivo JSON
+    guardarUsuariosEnArchivo(rutaArchivo, root);
+    cJSON_Delete(root); // Liberar la memoria
+
+    printf("\nDatos del usuario registrados y guardados en %s\n", rutaArchivo);
 
     return 0;
 }
-
-//Validación que no se repitan
-// Función para validar si ya existe un usuario con la misma ID en el archivo JSON
-int validarUsuarioExistente(int id) {
-    FILE *archivo;
-    archivo = fopen("../data/user_Register.json", "r"); // Abre el archivo en modo lectura
-
-    if (archivo == NULL) {
-        printf("No se pudo abrir el archivo.\n");
-        return 0; // Indica que no se pudo validar
-    }
-
-    char buffer[1024];
-    size_t size;
-
-    fseek(archivo, 0, SEEK_END);
-    size = ftell(archivo);
-    fseek(archivo, 0, SEEK_SET);
-
-    fread(buffer, size, 1, archivo);
-    fclose(archivo);
-
-    cJSON *json = cJSON_Parse(buffer); // Parsea el contenido del archivo como JSON
-
-    if (json == NULL) {
-        printf("Error al parsear el archivo JSON.\n");
-        return 0; // Indica que no se pudo validar
-    }
-
-    cJSON *usuario;
-    cJSON_ArrayForEach(usuario, json) {
-        cJSON *idJson = cJSON_GetObjectItemCaseSensitive(usuario, "id");
-        if (cJSON_IsNumber(idJson) && idJson->valueint == id) {
-            cJSON_Delete(json);
-            return 1; // Indica que el usuario existe
-        }
-    }
-
-    cJSON_Delete(json);
-    return 0; // Indica que el usuario no existe
-}
-
-

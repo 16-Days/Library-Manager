@@ -7,9 +7,12 @@
 #include <stdio.h>
 #include "funciones/manageCatalog.h"
 #include "funciones/manageUsers.h"
-#include "funciones/simpleSearch.h"
+
 
 #include "cJSON.h"
+
+char buscaSimple[100]; //contenido para busqueda simple 
+
 
 
 // Estructuras para almacenar datos
@@ -43,7 +46,7 @@ void manageCatalog() {
 
 //llamada a manageUsers.h
 void manageUsers() {
-    register_User();
+    mainss();
 }
 
 void loanHistory() {
@@ -58,13 +61,14 @@ void showStatistics() {
     // Implementación para mostrar estadísticas
 }
 
-void simpleSearch1() {
-   char searchText[100];  // Texto de búsqueda ingresado por el usuario
-   printf("Ingrese el texto de busqueda: ");
-   scanf("%s", searchText);  // Lee el texto de búsqueda
-
-    // Llama a la función simpleSearch() definida en simpleSearch.h
-    simpleSearch(searchText, "data/libros.json");
+void simpleSearch() {  
+    system("cls");
+    printf("\n\n----------------------------------------------------------------------------------------------------");
+    printf("\n\t\t\tBienvenido a busqueda simple");
+    printf("\n\nLa busqueda se realiza en base a: Titulo, Autor, Descripción\n~Indique el contenido relacionado a buscar:");
+    scanf("%s",buscaSimple);
+    buscarLibroPorTexto(buscaSimple);
+    printf("\n\n----------------------------------------------------------------------------------------------------");
 }
 
 void advancedSearch() {
@@ -83,7 +87,7 @@ int main() {
     int mainChoice, subChoice;
 
     do {
-        printf("\n--- Menu Principal ---\n");
+        printf("\n\n\n--- Menu Principal ---\n");
         printf("1. Opciones Operativas\n");
         printf("2. Opciones Generales\n");
         printf("3. Salir\n");
@@ -138,8 +142,8 @@ int main() {
                     scanf("%d", &subChoice);
 
                     switch (subChoice) {
-                        case 1:
-                            simpleSearch1();
+                        case 1:                    
+                            simpleSearch();
                             break;
                         case 2:
                             advancedSearch();

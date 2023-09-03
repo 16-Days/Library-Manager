@@ -1,0 +1,13 @@
+[{
+		"nombre":	"aa",
+		"cedula":	"123445567",
+		"correo":	"a"
+	}, {
+		"nombre":	"d",
+		"cedula":	"987654321",
+		"correo":	"dd"
+	}, {
+		"nombre":	"a",
+		"cedula":	"432143214",
+		"correo":	"f"
+	}]
