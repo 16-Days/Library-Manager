@@ -44,7 +44,7 @@ bool isBookAvailable(int bookId) {
 // Función para generar un comprobante de préstamo
 struct Loan generarComprobantePrestamo(const char *userId, int bookId, const char *startDate, const char *endDate) {
     struct Loan loan;
-    loan.loanId = 1; // Podría implementarse como un contador autoincremental en el futuro
+    loan.loanId = 1; // Podría implementarse como un contador autoincremental proximamente
     strcpy(loan.userId, userId);
     loan.bookId = bookId;
     strcpy(loan.startDate, startDate);
@@ -90,6 +90,7 @@ void prestarEjemplar() {
     marcarEjemplarNoDisponible(bookId);
 
     // Guardar el comprobante de préstamo (puedes implementar esta parte)
+    agregarPrestamoAPrestamosJson(&loan);
 }
 
 
@@ -142,4 +143,66 @@ void marcarEjemplarNoDisponible(int bookId) {
     }
 
     cJSON_Delete(root);
+}
+
+
+// Función para cargar la lista de préstamos desde el archivo JSON de préstamos
+cJSON *cargarPrestamosDesdeArchivo(const char *rutaArchivo) {
+    FILE *fp = fopen(rutaArchivo, "r");
+    if (fp != NULL) {
+        fseek(fp, 0, SEEK_END);
+        long file_size = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        char *file_content = (char *)malloc(file_size + 1);
+        fread(file_content, 1, file_size, fp);
+        fclose(fp);
+
+        cJSON *root = cJSON_Parse(file_content);
+        free(file_content);
+
+        return root;
+    } else {
+        return NULL;
+    }
+}
+
+// Función para guardar la lista de préstamos en el archivo JSON de préstamos
+void guardarPrestamosEnArchivo(const char *rutaArchivo, cJSON *root) {
+    FILE *fp = fopen(rutaArchivo, "w");
+    if (fp != NULL) {
+        char *json = cJSON_Print(root);
+        fputs(json, fp);
+        fclose(fp);
+        free(json);
+    }
+}
+
+// Función para agregar un préstamo al archivo prestamos.json
+void agregarPrestamoAPrestamosJson(const struct Loan *loan) {
+    cJSON *root = NULL;
+    
+    // Especifica la ruta completa al archivo JSON de préstamos
+    const char *rutaArchivo = "../data/prestamos.json";
+
+    // Carga la lista de préstamos existentes desde el archivo JSON
+    root = cargarPrestamosDesdeArchivo(rutaArchivo);
+
+    if (root == NULL) {
+        // Si el archivo JSON no existe o está vacío, crea un nuevo objeto JSON
+        root = cJSON_CreateArray();
+    }
+
+    // Crear un objeto JSON para el nuevo préstamo y agregarlo a la lista
+    cJSON *prestamo = cJSON_CreateObject();
+    cJSON_AddNumberToObject(prestamo, "loanId", loan->loanId);
+    cJSON_AddStringToObject(prestamo, "userId", loan->userId);
+    cJSON_AddNumberToObject(prestamo, "bookId", loan->bookId);
+    cJSON_AddStringToObject(prestamo, "startDate", loan->startDate);
+    cJSON_AddStringToObject(prestamo, "endDate", loan->endDate);
+    cJSON_AddItemToArray(root, prestamo);
+
+    // Guardar la lista actualizada de préstamos en el archivo JSON
+    guardarPrestamosEnArchivo(rutaArchivo, root);
+    cJSON_Delete(root); // Liberar la memoria
 }

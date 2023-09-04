@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "funciones/manageCatalog.h"
 #include "funciones/manageUsers.h"
+#include "funciones/prestamo.h"
 
 
 #include "cJSON.h"
@@ -77,6 +78,7 @@ void advancedSearch() {
 
 void borrowBook() {
     // Implementación para realizar préstamo
+    prestarEjemplar();
 }
 
 void returnBook() {
