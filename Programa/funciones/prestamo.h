@@ -36,6 +36,52 @@ char *obtenerFechaActual() {
     return buffer;
 }
 
+
+// Función para actualizar la cantidad de un ejemplar y marcarlo como no disponible si es necesario
+bool actualizarCantidadYVerificarEstado(int bookId) {
+    cJSON *root = cargarLibrosDesdeArchivo("../data/libros.json");
+    if (root == NULL) {
+        return false; // Error al cargar los libros
+    }
+
+    cJSON *libroObj;
+    cJSON_ArrayForEach(libroObj, root) {
+        int id = cJSON_GetObjectItemCaseSensitive(libroObj, "id")->valueint;
+        if (id == bookId) {
+            cJSON *cantidadObj = cJSON_GetObjectItemCaseSensitive(libroObj, "cantidad");
+
+            int cantidad = cantidadObj->valueint;
+
+            if (cantidad <= 0) {
+                cJSON_Delete(root);
+                return false; // El ejemplar no está disponible
+            }
+
+            cantidadObj->valueint = cantidad - 1; // Reducir la cantidad
+
+            if (cantidad - 1 == 0) {
+                marcarEjemplarNoDisponible(bookId); // Marcar como no disponible
+            }
+
+            // Guardar los cambios en el archivo "libros.json"
+            FILE *json_file = fopen("../data/libros.json", "w");
+            if (json_file != NULL) {
+                char *json_str = cJSON_Print(root);
+                fputs(json_str, json_file);
+                fclose(json_file);
+                free(json_str);
+            }
+
+            cJSON_Delete(root);
+            return true; // Ejemplar disponible y cantidad actualizada
+        }
+    }
+
+    cJSON_Delete(root);
+    return false; // El libro no se encontró en la lista
+}
+
+
 // Función para verificar si un usuario existe en la lista de usuarios por cédula
 bool existeUsuarioPorCedula(const cJSON *usuarios, const char *cedula) {
     cJSON *usuarioObj;
@@ -92,7 +138,6 @@ void prestarEjemplar() {
     printf("Ingrese su cédula: ");
     scanf("%s", userId);
 
-
     // Verificar si el usuario existe
     cJSON *usuarios = cargarUsuariosDesdeArchivo("../data/usuarios.json");
     if (usuarios == NULL) {
@@ -106,15 +151,8 @@ void prestarEjemplar() {
         return;
     }
 
-
-
-
     printf("Ingrese el identificador del ejemplar: ");
     scanf("%d", &bookId);
-    printf("Ingrese la fecha de inicio (dd/mm/yyyy): ");
-    scanf("%s", startDate);
-    printf("Ingrese la fecha de entrega (dd/mm/yyyy): ");
-    scanf("%s", endDate);
 
     // Verificar la disponibilidad del ejemplar
     if (!isBookAvailable(bookId)) {
@@ -122,22 +160,29 @@ void prestarEjemplar() {
         return;
     }
 
-    // Generar el comprobante de préstamo
-    struct Loan loan = generarComprobantePrestamo(userId, bookId, startDate, endDate);
+    // Actualizar la cantidad y marcar el ejemplar como no disponible si es necesario
+    if (actualizarCantidadYVerificarEstado(bookId)) {
+        printf("Ingrese la fecha de inicio (dd/mm/yyyy): ");
+        scanf("%s", startDate);
+        printf("Ingrese la fecha de entrega (dd/mm/yyyy): ");
+        scanf("%s", endDate);
 
-    // Mostrar el comprobante al usuario
-    printf("\nComprobante de Préstamo:\n");
-    printf("ID de Préstamo: %d\n", loan.loanId);
-    printf("Cédula del Usuario: %s\n", loan.userId);
-    printf("ID del Ejemplar: %d\n", loan.bookId);
-    printf("Fecha de Inicio: %s\n", loan.startDate);
-    printf("Fecha de Entrega: %s\n", loan.endDate);
+        // Generar el comprobante de préstamo
+        struct Loan loan = generarComprobantePrestamo(userId, bookId, startDate, endDate);
 
-    // Marcar el ejemplar como no disponible
-    marcarEjemplarNoDisponible(bookId);
+        // Mostrar el comprobante al usuario
+        printf("\nComprobante de Préstamo:\n");
+        printf("ID de Préstamo: %d\n", loan.loanId);
+        printf("Cédula del Usuario: %s\n", loan.userId);
+        printf("ID del Ejemplar: %d\n", loan.bookId);
+        printf("Fecha de Inicio: %s\n", loan.startDate);
+        printf("Fecha de Entrega: %s\n", loan.endDate);
 
-    // Guardar el comprobante de préstamo (puedes implementar esta parte)
-    agregarPrestamoAPrestamosJson(&loan);
+        // Guardar el comprobante de préstamo (puedes implementar esta parte)
+        agregarPrestamoAPrestamosJson(&loan);
+    } else {
+        printf("El ejemplar no está disponible.\n");
+    }
 }
 
 
