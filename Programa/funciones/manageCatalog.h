@@ -7,7 +7,7 @@
 struct Libro {
     int id; // Agregamos el campo ID
     char titulo[100];
-    char autor[100];
+    char autor[101];
     int anio;
     char genero[100];
     char descripcion[200];
@@ -159,6 +159,84 @@ int buscarLibroPorTexto(const char *textoBuscado) {
         free(autor_lower);
         free(descripcion_lower);
         free(textoBuscado_lower);
+    }
+
+    // Cerrar el archivo JSON, liberar memoria y mostrar mensaje si no hubo coincidencias
+    fclose(json_file);
+    cJSON_Delete(root);
+    free(json_string);
+
+    if (!huboCoincidencias) {
+        printf("\n\n\t\t---- No hay coincidencias con la búsqueda. ----\n");
+    }
+
+    return 0; // Retorna 0 al finalizar con éxito
+}
+
+/**
+ * Funcion encargada de busqueda exacta
+ * En caso de que el usuario coloque no, se hara la busqueda en base a los puestos en el display menu
+*/
+int buscarLibroAvanzado(const char *titulo, const char *autor, const char *resumen, const char *genero) {
+     // Abrir el archivo JSON de libros en modo lectura
+    FILE *json_file = fopen("../data/libros.json", "r");
+    if (json_file == NULL) {
+        perror("No se pudo abrir el archivo JSON");
+        return 1; // Retorna 1 en caso de error al abrir el archivo
+    }
+
+    // Obtener el tamaño del archivo JSON
+    fseek(json_file, 0, SEEK_END);
+    long file_size = ftell(json_file);
+    fseek(json_file, 0, SEEK_SET);
+
+    // Leer el contenido del archivo JSON en una cadena
+    char *json_string = (char *)malloc(file_size + 1);
+    fread(json_string, 1, file_size, json_file);
+    json_string[file_size] = '\0';
+
+    // Analizar la cadena JSON para crear una estructura cJSON
+    cJSON *root = cJSON_Parse(json_string);
+
+    // Manejar errores de análisis JSON
+    if (root == NULL) {
+        perror("Error al analizar el archivo JSON");
+        fclose(json_file);
+        free(json_string);
+        return 2; // Retorna 2 en caso de error en el análisis JSON
+    }
+
+    cJSON *libroObj;
+    bool huboCoincidencias = false; // Variable para rastrear coincidencias
+
+    // Recorrer cada libro en la estructura cJSON
+    cJSON_ArrayForEach(libroObj, root) {
+        struct Libro libro;
+
+        // Obtener los atributos del libro desde la estructura cJSON
+        libro.id = cJSON_GetObjectItemCaseSensitive(libroObj, "id")->valueint;
+        strcpy(libro.titulo, cJSON_GetObjectItemCaseSensitive(libroObj, "titulo")->valuestring);
+        strcpy(libro.autor, cJSON_GetObjectItemCaseSensitive(libroObj, "autor")->valuestring);
+        strcpy(libro.descripcion, cJSON_GetObjectItemCaseSensitive(libroObj, "descripcion")->valuestring);
+        strcpy(libro.genero, cJSON_GetObjectItemCaseSensitive(libroObj, "genero")->valuestring);
+
+        // Realizar la comparación con los parámetros de entrada
+        bool coincide_titulo = (strcmp(titulo, "no") == 0) || (strcmp(titulo, libro.titulo) == 0);
+        bool coincide_autor = (strcmp(autor, "no") == 0) || (strcmp(autor, libro.autor) == 0);
+        bool coincide_resumen = (strcmp(resumen, "no") == 0) || (strcmp(resumen, libro.descripcion) == 0);
+        bool coincide_genero = (strcmp(genero, "no") == 0) || (strcmp(genero, libro.genero) == 0);
+
+        // Verificar si todos los parámetros coinciden
+        if (coincide_titulo && coincide_autor && coincide_resumen && coincide_genero) {
+            printf("\n------------------------------");
+            printf("\nLibro encontrado");
+            printf("\nID: %d\n", libro.id);
+            printf("Título: %s\n", libro.titulo);
+            printf("Descripción: %s\n", libro.descripcion);
+            printf("Género: %s\n", libro.genero);
+            printf("\n");
+            huboCoincidencias = true; // Se encontró una coincidencia
+        }
     }
 
     // Cerrar el archivo JSON, liberar memoria y mostrar mensaje si no hubo coincidencias
