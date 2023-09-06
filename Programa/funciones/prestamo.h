@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "cJSON.h"
-//#include "manageCatalog.h"
+#include "manageUsers.h"
 
 
 
@@ -20,6 +20,18 @@ struct Loan {
     char endDate[11]; // Fecha de entrega (formato: dd/mm/yyyy)
 };
 
+
+// Función para verificar si un usuario existe en la lista de usuarios por cédula
+bool existeUsuarioPorCedula(const cJSON *usuarios, const char *cedula) {
+    cJSON *usuarioObj;
+    cJSON_ArrayForEach(usuarioObj, usuarios) {
+        const char *cedulaUsuario = cJSON_GetObjectItemCaseSensitive(usuarioObj, "cedula")->valuestring;
+        if (strcmp(cedulaUsuario, cedula) == 0) {
+            return true; // El usuario existe en la lista de usuarios
+        }
+    }
+    return false; // El usuario no se encontró en la lista de usuarios
+}
 
 
 // Función para verificar si un ejemplar está disponible
@@ -352,3 +364,4 @@ void eliminarPrestamoPorId(int loanId) {
     guardarPrestamosEnArchivo("../data/prestamos.json", root);
     cJSON_Delete(root);
 }
+
