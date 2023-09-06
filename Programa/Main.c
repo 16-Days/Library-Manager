@@ -14,24 +14,11 @@
 
 char buscaSimple[100]; //contenido para busqueda simple 
 
-
-
-// Estructuras para almacenar datos
-struct CatalogEntry {
-    char name[100];
-    char author[100];
-    int year;
-    char genre[50];
-    char summary[200];
-    int quantity;
-};
-
-struct User {
-    int id;
-    char name[100];
-    char address[200];
-};
-
+char libro[100];
+char autor[100];
+char resumen[100];
+char genero[100];
+char tipoBusqueda[100];
 
 
 // Funciones para cada opción
@@ -68,12 +55,60 @@ void simpleSearch() {
 }
 
 void advancedSearch() {
-    // Implementación para búsqueda avanzada
+    //buscarLibroAvanzado("no","no","no","Fantasia");
+    
+    printf("\n\n----------------------------------------------------------------------------------------------------");
+    printf("\n\t\t\tBienvenido a la búsqueda avanzada");
+
+    printf("\n\nDebe rellenar las siguientes etiquetas con la información de búsqueda. Si no desea buscar por esa etiqueta, coloque 'no'. La búsqueda debe ser sin caracteres especiales");
+
+    printf("\n\nIndique el Nombre del libro:");
+    getchar(); // Consumir el carácter de nueva línea en el búfer.
+    fgets(libro, sizeof(libro), stdin);  printf("El resumen es: %s\n", libro);
+
+    printf("\n\nIndique el autor:");
+    fgets(autor, sizeof(autor), stdin);  printf("El resumen es: %s\n", autor);
+
+    printf("\n\nIndique el resumen:");
+    fgets(resumen, sizeof(resumen), stdin); printf("El resumen es: %s\n", resumen);
+
+    printf("\n\nIndique el género:");
+    fgets(genero, sizeof(genero), stdin);  printf("El resumen es: %s\n", genero);
+
+    printf("\n\nIndique Exacta en el caso de buscar por este medio. Si no, se buscara por contiene:");
+    scanf("%s", tipoBusqueda);
+    
+    if (strcmp(tipoBusqueda, "no") == 0 || strcmp(libro, "no") == 0|| strcmp(autor, "no") == 0|| strcmp(resumen, "no") == 0|| strcmp(genero, "no") == 0) { 
+         printf("\n\nNo hay datos suficientes para la busqueda");
+    }
+    else {
+        if (strcmp(tipoBusqueda, "exacta") == 0 || strcmp(tipoBusqueda, "Exacta") == 0) {
+            printf("\n\nBúsqueda exacta seleccionada.");
+            buscarLibroAvanzado(libro,autor,resumen,genero);
+        } 
+        else {
+            printf("\n\nBúsqueda contiene seleccionada.");
+
+            printf("\n\n Contiene en libros.");
+            buscarLibroPorTexto(libro);
+            printf("\n\n Contiene en autor.");
+            buscarLibroPorTexto(autor);
+            printf("\n\n Contiene en resumen.");
+            buscarLibroPorTexto(resumen);
+            printf("\n\n Contiene en genero.");
+            buscarLibroPorTexto(genero);
+        }
+    }
+    
+    printf("\n\n----------------------------------------------------------------------------------------------------");
+    
 }
+
+
 
 void borrowBook() {
     // Implementación para realizar préstamo
-    prestarEjemplar();
+    
 }
 
 void returnBook() {
@@ -81,6 +116,7 @@ void returnBook() {
 }
 
 int main() {
+    system("cls");
     int mainChoice, subChoice;
 
     do {
