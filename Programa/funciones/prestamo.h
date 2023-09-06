@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "cJSON.h"
 #include "manageUsers.h"
+#include <time.h>
 
 
 
@@ -20,6 +21,20 @@ struct Loan {
     char endDate[11]; // Fecha de entrega (formato: dd/mm/yyyy)
 };
 
+
+// Función para obtener la fecha actual en formato "dd/mm/yyyy"
+char *obtenerFechaActual() {
+    time_t t;
+    struct tm *tm_info;
+
+    time(&t);
+    tm_info = localtime(&t);
+
+    static char buffer[11]; // "dd/mm/yyyy" + null-terminator
+    strftime(buffer, sizeof(buffer), "%d/%m/%Y", tm_info);
+
+    return buffer;
+}
 
 // Función para verificar si un usuario existe en la lista de usuarios por cédula
 bool existeUsuarioPorCedula(const cJSON *usuarios, const char *cedula) {
@@ -76,6 +91,24 @@ void prestarEjemplar() {
     // Solicitar la entrada del usuario
     printf("Ingrese su cédula: ");
     scanf("%s", userId);
+
+
+    // Verificar si el usuario existe
+    cJSON *usuarios = cargarUsuariosDesdeArchivo("../data/usuarios.json");
+    if (usuarios == NULL) {
+        printf("Error al cargar la lista de usuarios.\n");
+        return;
+    }
+
+    if (!existeUsuarioPorCedula(usuarios, userId)) {
+        printf("El usuario con cédula %s no existe.\n", userId);
+        cJSON_Delete(usuarios);
+        return;
+    }
+
+
+
+
     printf("Ingrese el identificador del ejemplar: ");
     scanf("%d", &bookId);
     printf("Ingrese la fecha de inicio (dd/mm/yyyy): ");
@@ -365,3 +398,45 @@ void eliminarPrestamoPorId(int loanId) {
     cJSON_Delete(root);
 }
 
+
+
+
+// Función para verificar si un préstamo está vencido o próximo a vencer
+void verificarVencimientoPrestamos() {
+    cJSON *prestamos = cargarPrestamosDesdeArchivo("../data/prestamos.json");
+    if (prestamos == NULL) {
+        printf("Error al cargar la lista de préstamos.\n");
+        return;
+    }
+
+    char fechaActual[11];
+    strcpy(fechaActual, obtenerFechaActual());
+
+    cJSON *prestamoObj;
+    cJSON_ArrayForEach(prestamoObj, prestamos) {
+        const char *endDate = cJSON_GetObjectItemCaseSensitive(prestamoObj, "endDate")->valuestring;
+
+        // Parsear la fecha de entrega en formato "dd/mm/yyyy"
+        int endDay, endMonth, endYear;
+        sscanf(endDate, "%d/%d/%d", &endDay, &endMonth, &endYear);
+
+        // Parsea la fecha actual en formato "dd/mm/yyyy"
+        int currentDay, currentMonth, currentYear;
+        sscanf(fechaActual, "%d/%d/%d", &currentDay, &currentMonth, &currentYear);
+
+        // Calcular la diferencia en días entre la fecha actual y la fecha de entrega
+        int daysDifference = (endYear - currentYear) * 365 + (endMonth - currentMonth) * 30 + (endDay - currentDay);
+
+        if (daysDifference >= 0 && daysDifference <= 3) {
+            // El préstamo está vencido o próximo a vencer
+            int loanId = cJSON_GetObjectItemCaseSensitive(prestamoObj, "loanId")->valueint;
+            const char *userId = cJSON_GetObjectItemCaseSensitive(prestamoObj, "userId")->valuestring;
+            printf("Préstamo vencido o próximo a vencer:\n");
+            printf("ID de Préstamo: %d\n", loanId);
+            printf("Cédula del Usuario: %s\n", userId);
+            printf("Fecha de Entrega: %s\n", endDate);
+        }
+    }
+
+    cJSON_Delete(prestamos);
+}
