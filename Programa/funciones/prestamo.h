@@ -151,6 +151,8 @@ void prestarEjemplar() {
         return;
     }
 
+
+
     printf("Ingrese el identificador del ejemplar: ");
     scanf("%d", &bookId);
 
@@ -312,6 +314,13 @@ void devolverEjemplar() {
     printf("Ingrese la fecha de devolución (dd/mm/yyyy): ");
     scanf("%s", returnDate);
 
+    realizarDevolucionEjemplar(loanId, returnDate);
+}
+
+
+
+// Función para realizar la devolución de un ejemplar
+void realizarDevolucionEjemplar(int loanId, const char *returnDate) {
     // Realizar las operaciones de devolución aquí
     cJSON *prestamoObj = buscarPrestamoPorId(loanId);
 
@@ -320,21 +329,53 @@ void devolverEjemplar() {
         return;
     }
 
+    // Obtener el ID del ejemplar del préstamo
+    int bookId = cJSON_GetObjectItemCaseSensitive(prestamoObj, "bookId")->valueint;
+
+    // Verificar si el ejemplar está marcado como no disponible (estado `false`)
+    cJSON *root = cargarLibrosDesdeArchivo("../data/libros.json");
+    if (root == NULL) {
+        printf("Error al cargar los libros.\n");
+        return;
+    }
+
+    cJSON *libroObj;
+    cJSON_ArrayForEach(libroObj, root) {
+        int id = cJSON_GetObjectItemCaseSensitive(libroObj, "id")->valueint;
+        if (id == bookId) {
+            bool estado = cJSON_GetObjectItemCaseSensitive(libroObj, "estado")->valueint;
+            if (!estado) {
+                // Marcar el ejemplar como disponible solo si está como no disponible
+                cJSON_GetObjectItemCaseSensitive(libroObj, "estado")->valueint = 1;
+                break;
+            }
+        }
+    }
+
+    // Guardar los cambios en el archivo "libros.json"
+    FILE *json_file = fopen("../data/libros.json", "w");
+    if (json_file != NULL) {
+        char *json_str = cJSON_Print(root);
+        fputs(json_str, json_file);
+        fclose(json_file);
+        free(json_str);
+    }
+
+    cJSON_Delete(root);
+
     // Calcular el monto a cancelar
     float montoACancelar = calcularMontoACancelar(prestamoObj, returnDate);
 
     // Mostrar el monto a cancelar al usuario
     printf("Monto a cancelar: %.2f\n", montoACancelar);
 
-    // Marcar el ejemplar como disponible
-    int bookId = cJSON_GetObjectItemCaseSensitive(prestamoObj, "bookId")->valueint;
-    marcarEjemplarDisponible(bookId);
-
     // Eliminar el préstamo del archivo "prestamos.json"
     eliminarPrestamoPorId(loanId);
 
     printf("Devolución exitosa. El ejemplar ha sido marcado como disponible y el préstamo ha sido eliminado.\n");
 }
+
+
 
 
 
