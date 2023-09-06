@@ -22,6 +22,50 @@ struct Loan {
 };
 
 
+
+// Variable global para llevar un seguimiento del último loanId utilizado
+static int lastLoanId = 0;
+
+// Ruta al archivo de configuración para almacenar lastLoanId
+const char *configFilePath = "../data/config.txt";
+
+// Función para cargar el último loanId desde un archivo de configuración
+void cargarLastLoanId() {
+    FILE *configFile = fopen(configFilePath, "r");
+    if (configFile != NULL) {
+        fscanf(configFile, "%d", &lastLoanId);
+        fclose(configFile);
+    } else {
+        // Si el archivo no existe, inicializa lastLoanId a un valor predeterminado
+        lastLoanId = 0;
+        guardarLastLoanId(); // guarda el valor inicial en el archivo
+    }
+}
+
+// Función para guardar el último loanId en un archivo de configuración
+void guardarLastLoanId() {
+    FILE *configFile = fopen(configFilePath, "w");
+    if (configFile != NULL) {
+        fprintf(configFile, "%d", lastLoanId);
+        fclose(configFile);
+    }
+}
+
+// Función para obtener el próximo ID de préstamo disponible
+int obtenerProximoLoanId() {
+    // Cargar el último loanId al iniciar el programa
+    cargarLastLoanId();
+
+    // Incrementar el loanId y guardar el nuevo valor
+    int nextLoanId = ++lastLoanId;
+    guardarLastLoanId();
+
+    return nextLoanId;
+}
+
+
+
+
 // Función para obtener la fecha actual en formato "dd/mm/yyyy"
 char *obtenerFechaActual() {
     time_t t;
@@ -119,7 +163,7 @@ bool isBookAvailable(int bookId) {
 // Función para generar un comprobante de préstamo
 struct Loan generarComprobantePrestamo(const char *userId, int bookId, const char *startDate, const char *endDate) {
     struct Loan loan;
-    loan.loanId = 1; // Podría implementarse como un contador autoincremental proximamente
+    loan.loanId = obtenerProximoLoanId(); // Un contador autoincremental 
     strcpy(loan.userId, userId);
     loan.bookId = bookId;
     strcpy(loan.startDate, startDate);
