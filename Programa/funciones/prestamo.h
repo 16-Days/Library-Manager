@@ -206,3 +206,147 @@ void agregarPrestamoAPrestamosJson(const struct Loan *loan) {
     guardarPrestamosEnArchivo(rutaArchivo, root);
     cJSON_Delete(root); // Liberar la memoria
 }
+
+
+
+// Función para devolver un ejemplar
+void devolverEjemplar() {
+    int loanId;
+    char returnDate[11];
+
+    // Solicitar la entrada del usuario
+    printf("Ingrese el identificador de préstamo: ");
+    scanf("%d", &loanId);
+    printf("Ingrese la fecha de devolución (dd/mm/yyyy): ");
+    scanf("%s", returnDate);
+
+    // Realizar las operaciones de devolución aquí
+    cJSON *prestamoObj = buscarPrestamoPorId(loanId);
+
+    if (prestamoObj == NULL) {
+        printf("El préstamo con ID %d no se encontró.\n", loanId);
+        return;
+    }
+
+    // Calcular el monto a cancelar
+    float montoACancelar = calcularMontoACancelar(prestamoObj, returnDate);
+
+    // Mostrar el monto a cancelar al usuario
+    printf("Monto a cancelar: %.2f\n", montoACancelar);
+
+    // Marcar el ejemplar como disponible
+    int bookId = cJSON_GetObjectItemCaseSensitive(prestamoObj, "bookId")->valueint;
+    marcarEjemplarDisponible(bookId);
+
+    // Eliminar el préstamo del archivo "prestamos.json"
+    eliminarPrestamoPorId(loanId);
+
+    printf("Devolución exitosa. El ejemplar ha sido marcado como disponible y el préstamo ha sido eliminado.\n");
+}
+
+
+
+// Función para buscar un préstamo por su identificador en el archivo "prestamos.json"
+cJSON *buscarPrestamoPorId(int loanId) {
+    cJSON *root = cargarPrestamosDesdeArchivo("../data/prestamos.json");
+    if (root == NULL) {
+        return NULL; // Error al cargar los préstamos
+    }
+
+    cJSON *prestamoObj;
+    cJSON_ArrayForEach(prestamoObj, root) {
+        int id = cJSON_GetObjectItemCaseSensitive(prestamoObj, "loanId")->valueint;
+        if (id == loanId) {
+            return prestamoObj; // Devuelve el objeto JSON del préstamo encontrado
+        }
+    }
+
+    cJSON_Delete(root);
+    return NULL; // El préstamo no se encontró en la lista
+}
+
+// Función para calcular el monto a cancelar en función de la duración del préstamo y la fecha de devolución
+float calcularMontoACancelar(const cJSON *prestamoObj, const char *returnDate) {
+    // Obtener la fecha de inicio y la fecha de entrega del préstamo desde el objeto JSON
+    const char *startDate = cJSON_GetObjectItemCaseSensitive(prestamoObj, "startDate")->valuestring;
+    const char *endDate = cJSON_GetObjectItemCaseSensitive(prestamoObj, "endDate")->valuestring;
+
+    // Parsear las fechas en formato "dd/mm/yyyy"
+    int startDay, startMonth, startYear, endDay, endMonth, endYear, returnDay, returnMonth, returnYear;
+    sscanf(startDate, "%d/%d/%d", &startDay, &startMonth, &startYear);
+    sscanf(endDate, "%d/%d/%d", &endDay, &endMonth, &endYear);
+    sscanf(returnDate, "%d/%d/%d", &returnDay, &returnMonth, &returnYear);
+
+    // Calcular la diferencia en días entre la fecha de inicio y la fecha de devolución
+    int daysDifference = (returnYear - startYear) * 365 + (returnMonth - startMonth) * 30 + (returnDay - startDay);
+
+    // Calcular el monto a cancelar en función de la duración del préstamo
+    float montoACancelar = 0.0;
+
+    if (daysDifference >= 1 && daysDifference <= 7) {
+        montoACancelar = daysDifference * 150.0; // Tarifa para préstamo de 1 a 7 días
+    } else if (daysDifference >= 8 && daysDifference <= 15) {
+        montoACancelar = daysDifference * 125.0; // Tarifa para préstamo de 8 a 15 días
+    } else if (daysDifference >= 16) {
+        montoACancelar = daysDifference * 100.0; // Tarifa para préstamo de 16 días o más
+    }
+
+    return montoACancelar;
+}
+
+
+// Función para marcar un ejemplar como disponible
+void marcarEjemplarDisponible(int bookId) {
+    cJSON *root = cargarLibrosDesdeArchivo("../data/libros.json");
+    if (root == NULL) {
+        return; // Error al cargar los libros
+    }
+
+    cJSON *libroObj;
+    cJSON_ArrayForEach(libroObj, root) {
+        int id = cJSON_GetObjectItemCaseSensitive(libroObj, "id")->valueint;
+        if (id == bookId) {
+            cJSON_GetObjectItemCaseSensitive(libroObj, "estado")->valueint = 1; // Marcar como disponible
+            break;
+        }
+    }
+
+    FILE *json_file = fopen("../data/libros.json", "w");
+    if (json_file != NULL) {
+        char *json_str = cJSON_Print(root);
+        fputs(json_str, json_file);
+        fclose(json_file);
+        free(json_str);
+    }
+
+    cJSON_Delete(root);
+}
+
+
+// Función para eliminar un préstamo del archivo "prestamos.json" por loanId
+void eliminarPrestamoPorId(int loanId) {
+    cJSON *root = cargarPrestamosDesdeArchivo("../data/prestamos.json");
+    if (root == NULL) {
+        return; // Error al cargar los préstamos
+    }
+
+    cJSON *prestamoObj;
+    cJSON *next = NULL;
+
+    cJSON_ArrayForEach(prestamoObj, root) {
+        int id = cJSON_GetObjectItemCaseSensitive(prestamoObj, "loanId")->valueint;
+        if (id == loanId) {
+            next = prestamoObj->next; // Obtener el siguiente elemento antes de eliminar
+            cJSON_Delete(prestamoObj); // Eliminar el objeto JSON del préstamo
+            break;
+        }
+    }
+
+    if (next != NULL) {
+        root->child = next; // Actualizar el puntero al primer elemento si era el primero
+    }
+
+    // Guardar la lista actualizada de préstamos en el archivo JSON
+    guardarPrestamosEnArchivo("../data/prestamos.json", root);
+    cJSON_Delete(root);
+}
