@@ -32,12 +32,7 @@ struct User {
     char address[200];
 };
 
-struct Loan {
-    int loanId;
-    int userId;
-    int bookId;
-    // Otros campos necesarios para el préstamo
-};
+
 
 // Funciones para cada opción
 void manageCatalog() {

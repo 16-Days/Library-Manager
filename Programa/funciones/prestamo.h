@@ -20,6 +20,8 @@ struct Loan {
     char endDate[11]; // Fecha de entrega (formato: dd/mm/yyyy)
 };
 
+
+
 // Función para verificar si un ejemplar está disponible
 bool isBookAvailable(int bookId) {
     cJSON *root = cargarLibrosDesdeArchivo("../data/libros.json");
