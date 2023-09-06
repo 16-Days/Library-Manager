@@ -74,11 +74,14 @@ char *obtenerFechaActual() {
     time(&t);
     tm_info = localtime(&t);
 
-    static char buffer[11]; // "dd/mm/yyyy" + null-terminator
-    strftime(buffer, sizeof(buffer), "%d/%m/%Y", tm_info);
+    char *buffer = (char *)malloc(11); // "dd/mm/yyyy" + null-terminator
+    if (buffer != NULL) {
+        strftime(buffer, 11, "%d/%m/%Y", tm_info);
+    }
 
     return buffer;
 }
+
 
 
 // Función para actualizar la cantidad de un ejemplar y marcarlo como no disponible si es necesario
@@ -569,4 +572,5 @@ void verificarVencimientoPrestamos() {
     }
 
     cJSON_Delete(prestamos);
+    free(fechaActual); // Liberar la memoria asignada a fechaActual
 }
