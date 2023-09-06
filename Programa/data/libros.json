@@ -2,100 +2,80 @@
   {
     "id": 1,
     "titulo": "La sombra del viento",
-    "autor": "Carlos Ruiz Zafón",
+    "autor": "Carlos Ruiz Zafon",
     "anio": 2001,
-    "genero": "Ficción",
+    "genero": "Ficcion",
     "descripcion": "Una historia sobre un libro maldito",
     "cantidad": 4,
     "estado": true
   },
   {
     "id": 2,
-    "titulo": "Cien años de soledad",
-    "autor": "Gabriel García Márquez",
+    "titulo": "Cien anos de soledad",
+    "autor": "Gabriel Garcia Marquez",
     "anio": 1967,
-    "genero": "Realismo mágico",
-    "descripcion": "La saga de la familia Buendía en Macondo",
+    "genero": "Realismo magico",
+    "descripcion": "La saga de la familia Buendia en Macondo",
     "cantidad": 4,
     "estado": true
   },
   {
     "id": 3,
-    "titulo": "La sombra del viento",
-    "autor": "Carlos Ruiz Zafón",
-    "anio": 2001,
-    "genero": "Ficción",
-    "descripcion": "Una historia sobre un libro maldito",
-    "cantidad": 4,
-    "estado": true
-  },
-  {
-    "id": 4,
-    "titulo": "Cien años de soledad",
-    "autor": "Gabriel García Márquez",
-    "anio": 1967,
-    "genero": "Realismo mágico",
-    "descripcion": "La saga de la familia Buendía en Macondo",
-    "cantidad": 4,
-    "estado": true
-  },
-  {
-    "id": 5,
     "titulo": "El nombre del viento",
     "autor": "Patrick Rothfuss",
     "anio": 2007,
-    "genero": "Fantasía",
+    "genero": "Fantasia",
     "descripcion": "Las aventuras de Kvothe en busca de conocimiento",
     "cantidad": 4,
     "estado": true
   },
   {
-    "id": 6,
+    "id": 4,
     "titulo": "1984",
     "autor": "George Orwell",
     "anio": 1949,
-    "genero": "Ciencia ficción",
+    "genero": "Ciencia ficcion",
     "descripcion": "Un mundo totalitario y su lucha por la verdad",
     "cantidad": 4,
     "estado": true
   },
   {
-    "id": 7,
+    "id": 5,
     "titulo": "Harry Potter y la piedra filosofal",
     "autor": "J.K. Rowling",
     "anio": 1997,
-    "genero": "Fantasía",
+    "genero": "Fantasia",
     "descripcion": "El inicio de las aventuras de Harry en Hogwarts",
     "cantidad": 4,
     "estado": true
   },
   {
+    "id": 6,
+    "titulo": "Los juegos del hambre",
+    "autor": "Suzanne Collins",
+    "anio": 2008,
+    "genero": "Ciencia ficcion",
+    "descripcion": "Un futuro distopico y lucha por la supervivencia",
+    "cantidad": 4,
+    "estado": true
+  },
+  {
+    "id": 7,
+    "titulo": "Los juegos del hambre",
+    "autor": "Suzanne Collins",
+    "anio": 2008,
+    "genero": "Ciencia ficcion",
+    "descripcion": "Un futuro distopico y lucha por la supervivencia",
+    "cantidad": 4,
+    "estado": true
+  },
+  {
     "id": 8,
-    "titulo": "Los juegos del hambre",
-    "autor": "Suzanne Collins",
-    "anio": 2008,
-    "genero": "Ciencia ficción",
-    "descripcion": "Un futuro distópico y lucha por la supervivencia",
-    "cantidad": 4,
-    "estado": true
-  },
-  {
-    "id": 9,
-    "titulo": "Los juegos del hambre",
-    "autor": "Suzanne Collins",
-    "anio": 2008,
-    "genero": "Ciencia ficción",
-    "descripcion": "Un futuro distópico y lucha por la supervivencia",
-    "cantidad": 4,
-    "estado": true
-  },
-  {
-    "id": 10,
     "titulo": "Los juegos del susto",
     "autor": "Suzanne Collins",
     "anio": 2008,
-    "genero": "Ciencia ficción",
-    "descripcion": "Un futuro distópico y lucha por la supervivencia",
+    "genero": "Ciencia ficcion",
+    "descripcion": "Un futuro distopico y lucha por la supervivencia",
     "cantidad": 4,
     "estado": true
   }
