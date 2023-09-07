@@ -19,6 +19,8 @@ struct Loan {
 cJSON *cargarLibrosDesdeArchivo(const char *archivo);
 void marcarEjemplarNoDisponible(int bookId);
 // En prestamo.h (o en un archivo de encabezado separado)
+cJSON *cargarUsuariosDesdeArchivo(const char *rutaArchivo);
+
 void agregarPrestamoAPrestamosJson(const struct Loan *loan);
 // En prestamo.h (o en un archivo de encabezado separado)
 void realizarDevolucionEjemplar(int loanId, const char *returnDate);
@@ -350,8 +352,6 @@ void agregarPrestamoAPrestamosJson(const struct Loan *loan) {
     cJSON_Delete(root); // Liberar la memoria
 }
 
-
-
 // Función para devolver un ejemplar
 void devolverEjemplar() {
     int loanId;
@@ -364,9 +364,21 @@ void devolverEjemplar() {
     scanf("%s", returnDate);
 
     realizarDevolucionEjemplar(loanId, returnDate);
+
+    // Agregar un ciclo para volver al menú de opciones generales
+    char choice;
+    do {
+        printf("\n¿Desea realizar otra acción? (S/N): ");
+        scanf(" %c", &choice);
+        if (choice == 'S' || choice == 's') {
+            // Volver al menú de opciones generales
+            return main(); 
+
+        } else if (choice != 'N' && choice != 'n') {
+            printf("Opción no válida. Intente nuevamente.\n");
+        }
+    } while (choice != 'N' && choice != 'n');
 }
-
-
 
 // Función para realizar la devolución de un ejemplar
 void realizarDevolucionEjemplar(int loanId, const char *returnDate) {

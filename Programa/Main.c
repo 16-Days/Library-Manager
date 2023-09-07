@@ -38,6 +38,7 @@ void loanHistory() {
 
 void dueLoans() {
     // Implementación para mostrar préstamos vencidos o próximos a vencer
+    verificarVencimientoPrestamos();
     
 }
 
