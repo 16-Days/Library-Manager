@@ -1,1 +1,13 @@
-
+Nombre del curso: Lenguajes de programación
+b. Número de semestre y año lectivo: 2 semestre del 2023
+c. Nombre del Estudiante: 
+Duan Antonio Espinoza Olivares
+Número de carnet del estudiante: 2019079490
+c. Nombre del Estudiante: 
+Aaron Piñar
+Número de carnet del estudiante: 2019063903 
+d. Número de carnet del estudiante: 2018161994
+e. Proyecto 1
+f. Fecha de entrega:06/09/2023
+g. Estatus de la entrega (debe ser CONGRUENTE con la solución entregada): Regular
+[Deplorable|Regular|Buena|MuyBuena|Excelente|Superior]

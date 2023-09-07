@@ -176,8 +176,7 @@ int buscarLibroPorTexto(const char *textoBuscado) {
 /**
  * Funcion encargada de busqueda exacta
  * En caso de que el usuario coloque no, se hara la busqueda en base a los puestos en el display menu
-*/
-int buscarLibroAvanzado(const char *titulo, const char *autor, const char *resumen, const char *genero) {
+*/int buscarLibroAvanzado(const char *titulo, const char *autor, const char *resumen, const char *genero) {
      // Abrir el archivo JSON de libros en modo lectura
     FILE *json_file = fopen("../data/libros.json", "r");
     if (json_file == NULL) {

@@ -47,13 +47,12 @@ void showStatistics() {
 }
 
 void simpleSearch() {  
-    system("cls");
     printf("\n\n----------------------------------------------------------------------------------------------------");
     printf("\n\t\t\tBienvenido a busqueda simple");
     printf("\n\nLa busqueda se realiza en base a: Titulo, Autor, Descripción\n~Indique el contenido relacionado a buscar:");
-    getchar(); // Consumir el carácter de nueva línea en el búfer.
-    fgets(buscaSimple, sizeof(buscaSimple), stdin);  printf("El resumen es: %s\n", buscaSimple);
-    //scanf("%s",buscaSimple);
+    //getchar(); // Consumir el carácter de nueva línea en el búfer.
+    //fgets(buscaSimple, sizeof(buscaSimple), stdin);  printf("El resumen es: %s\n", buscaSimple);
+    scanf("%s",buscaSimple);
     buscarLibroPorTexto(buscaSimple);
     printf("\n\n----------------------------------------------------------------------------------------------------");
 }
@@ -68,23 +67,24 @@ void advancedSearch() {
 
     printf("\n\nIndique el Nombre del libro:");
     getchar(); // Consumir el carácter de nueva línea en el búfer.
-    fgets(libro, sizeof(libro), stdin);  printf("El resumen es: %s\n", libro);
+    fgets(libro, sizeof(libro), stdin);  //printf("El libro es: %s\n", libro);
 
     printf("\n\nIndique el autor:");
-    fgets(autor, sizeof(autor), stdin);  printf("El resumen es: %s\n", autor);
+    fgets(autor, sizeof(autor), stdin);  //printf("El autor es: %s\n", autor);
 
     printf("\n\nIndique el resumen:");
-    fgets(resumen, sizeof(resumen), stdin); printf("El resumen es: %s\n", resumen);
+    fgets(resumen, sizeof(resumen), stdin); //printf("El resumen es: %s\n", resumen);
 
     printf("\n\nIndique el género:");
-    fgets(genero, sizeof(genero), stdin);  printf("El resumen es: %s\n", genero);
+    fgets(genero, sizeof(genero), stdin);  //printf("El genero es: %s\n", genero);
 
     printf("\n\nIndique Exacta en el caso de buscar por este medio. Si no, se buscara por contiene:");
-    scanf("%s", tipoBusqueda);
+    scanf("%s", tipoBusqueda); //printf("El tipo busqaueda es: %s\n", tipoBusqueda);
     
-    if (strcmp(tipoBusqueda, "no") == 0 || strcmp(libro, "no") == 0|| strcmp(autor, "no") == 0|| strcmp(resumen, "no") == 0|| strcmp(genero, "no") == 0) { 
+    if (strcmp(libro, "no") == 1 && strcmp(autor, "no") == 1 && strcmp(resumen, "no") == 1 && strcmp(genero, "no") == 1) { 
          printf("\n\nNo hay datos suficientes para la busqueda");
     }
+
     else {
         if (strcmp(tipoBusqueda, "exacta") == 0 || strcmp(tipoBusqueda, "Exacta") == 0) {
             printf("\n\nBúsqueda exacta seleccionada.");
@@ -181,7 +181,8 @@ int main() {
                     scanf("%d", &subChoice);
 
                     switch (subChoice) {
-                        case 1:                    
+                        case 1:   
+                            system("cls");                 
                             simpleSearch();
                             break;
                         case 2:
