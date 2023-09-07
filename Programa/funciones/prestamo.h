@@ -130,7 +130,7 @@ bool actualizarCantidadYVerificarEstado(int bookId) {
             }
 
             // Guardar los cambios en el archivo "libros.json"
-            FILE *json_file = fopen("../data/libros.json", "w");
+            FILE *json_file = fopen("../data/libros.json", "w+");
             if (json_file != NULL) {
                 char *json_str = cJSON_Print(root);
                 fputs(json_str, json_file);
@@ -216,8 +216,6 @@ void prestarEjemplar() {
         cJSON_Delete(usuarios);
         return;
     }
-
-
 
     printf("Ingrese el identificador del ejemplar: ");
     scanf("%d", &bookId);

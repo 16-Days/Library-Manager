@@ -49,7 +49,9 @@ void simpleSearch() {
     printf("\n\n----------------------------------------------------------------------------------------------------");
     printf("\n\t\t\tBienvenido a busqueda simple");
     printf("\n\nLa busqueda se realiza en base a: Titulo, Autor, Descripción\n~Indique el contenido relacionado a buscar:");
-    scanf("%s",buscaSimple);
+    getchar(); // Consumir el carácter de nueva línea en el búfer.
+    fgets(buscaSimple, sizeof(buscaSimple), stdin);  printf("El resumen es: %s\n", buscaSimple);
+    //scanf("%s",buscaSimple);
     buscarLibroPorTexto(buscaSimple);
     printf("\n\n----------------------------------------------------------------------------------------------------");
 }
@@ -108,6 +110,7 @@ void advancedSearch() {
 
 void borrowBook() {
     // Implementación para realizar préstamo
+    prestarEjemplar();
     
 }
 

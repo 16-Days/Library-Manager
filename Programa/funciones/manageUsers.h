@@ -10,24 +10,24 @@ struct Usuario {
     char correo[100];
 };
 
-// Función para verificar si una cadena contiene solo dígitos y tiene exactamente 9 caracteres
 int validarCedula(const char *cedula) {
     int len = strlen(cedula);
     if (len != 9) {
-        return 0; // La cédula debe tener exactamente 9 dígitos
+        return 0;
     }
     for (int i = 0; i < len; i++) {
         if (!isdigit(cedula[i])) {
-            return 0; // La cédula debe contener solo dígitos
+            return 0;
         }
     }
-    return 1; // La cédula es válida
+    return 1;
 }
 
-// Función para ingresar los datos del usuario
 void ingresarUsuario(struct Usuario *usuario) {
+    getchar();
     printf("Ingrese el nombre: ");
-    scanf("%s", usuario->nombre);
+    fgets(usuario->nombre, sizeof(usuario->nombre), stdin);
+    usuario->nombre[strcspn(usuario->nombre, "\n")] = '\0';
 
     char cedula[20];
     do {
@@ -41,7 +41,6 @@ void ingresarUsuario(struct Usuario *usuario) {
     scanf("%s", usuario->correo);
 }
 
-// Función para cargar la lista de usuarios desde el archivo JSON
 cJSON *cargarUsuariosDesdeArchivo(const char *rutaArchivo) {
     FILE *fp = fopen(rutaArchivo, "r");
     if (fp != NULL) {
@@ -62,7 +61,6 @@ cJSON *cargarUsuariosDesdeArchivo(const char *rutaArchivo) {
     }
 }
 
-// Función para guardar la lista de usuarios en el archivo JSON
 void guardarUsuariosEnArchivo(const char *rutaArchivo, cJSON *root) {
     FILE *fp = fopen(rutaArchivo, "w");
     if (fp != NULL) {
@@ -73,6 +71,22 @@ void guardarUsuariosEnArchivo(const char *rutaArchivo, cJSON *root) {
     }
 }
 
+int cedulaExiste(cJSON *root, const char *cedula) {
+    if (root == NULL) {
+        return 0; // Si no hay usuarios en el JSON, la cédula no existe.
+    }
+
+    cJSON *usuario;
+    cJSON_ArrayForEach(usuario, root) {
+        cJSON *cedulaJSON = cJSON_GetObjectItemCaseSensitive(usuario, "cedula");
+        if (cJSON_IsString(cedulaJSON) && (strcmp(cedula, cedulaJSON->valuestring) == 0)) {
+            return 1; // La cédula ya existe en el JSON.
+        }
+    }
+
+    return 0; // La cédula no existe en el JSON.
+}
+
 int mainss() {
     struct Usuario nuevoUsuario;
     cJSON *root = NULL;
@@ -80,29 +94,25 @@ int mainss() {
     printf("Por favor, ingrese los datos del nuevo usuario:\n");
     ingresarUsuario(&nuevoUsuario);
 
-    // Especificar la ruta completa al archivo JSON
     const char *rutaArchivo = "../data/usuarios.json";
-
-    // Cargar la lista de usuarios existentes desde el archivo JSON
     root = cargarUsuariosDesdeArchivo(rutaArchivo);
 
     if (root == NULL) {
-        // Si el archivo JSON no existe o está vacío, crea un nuevo objeto JSON
         root = cJSON_CreateArray();
     }
 
-    // Crear un objeto JSON para el nuevo usuario y agregarlo a la lista
-    cJSON *usuario = cJSON_CreateObject();
-    cJSON_AddStringToObject(usuario, "nombre", nuevoUsuario.nombre);
-    cJSON_AddStringToObject(usuario, "cedula", nuevoUsuario.cedula);
-    cJSON_AddStringToObject(usuario, "correo", nuevoUsuario.correo);
-    cJSON_AddItemToArray(root, usuario);
-
-    // Guardar la lista actualizada de usuarios en el archivo JSON
-    guardarUsuariosEnArchivo(rutaArchivo, root);
-    cJSON_Delete(root); // Liberar la memoria
-
-    printf("\nDatos del usuario registrados y guardados en %s\n", rutaArchivo);
+    if (cedulaExiste(root, nuevoUsuario.cedula)) {
+        printf("La cédula ingresada ya existe en el archivo JSON. No se registró el usuario.\n");
+    } else {
+        cJSON *usuario = cJSON_CreateObject();
+        cJSON_AddStringToObject(usuario, "nombre", nuevoUsuario.nombre);
+        cJSON_AddStringToObject(usuario, "cedula", nuevoUsuario.cedula);
+        cJSON_AddStringToObject(usuario, "correo", nuevoUsuario.correo);
+        cJSON_AddItemToArray(root, usuario);
+        guardarUsuariosEnArchivo(rutaArchivo, root);
+        cJSON_Delete(root);
+        printf("\nDatos del usuario registrados y guardados en %s\n", rutaArchivo);
+    }
 
     return 0;
 }
