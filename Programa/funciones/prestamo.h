@@ -15,8 +15,6 @@ struct Loan {
     char endDate[11]; // Fecha de entrega (formato: dd/mm/yyyy)
 };
 
-
-
 // Declaración de funciones externas definidas en otros archivos
 cJSON *cargarLibrosDesdeArchivo(const char *archivo);
 void marcarEjemplarNoDisponible(int bookId);
@@ -35,11 +33,6 @@ void eliminarPrestamoPorId(int loanId);
 void guardarLastLoanId();
 void cargarLastLoanId();
 
-
-
-
-
-
 // Variable global para llevar un seguimiento del último loanId utilizado
 static int lastLoanId = 0;
 
@@ -54,7 +47,6 @@ void guardarLastLoanId() {
         fclose(configFile);
     }
 }
-
 
 // Función para cargar el último loanId desde un archivo de configuración
 void cargarLastLoanId() {
@@ -82,9 +74,6 @@ int obtenerProximoLoanId() {
     return nextLoanId;
 }
 
-
-
-
 // Función para obtener la fecha actual en formato "dd/mm/yyyy"
 char *obtenerFechaActual() {
     time_t t;
@@ -101,15 +90,12 @@ char *obtenerFechaActual() {
     return buffer;
 }
 
-
-
 // Función para actualizar la cantidad de un ejemplar y marcarlo como no disponible si es necesario
 bool actualizarCantidadYVerificarEstado(int bookId) {
     cJSON *root = cargarLibrosDesdeArchivo("../data/libros.json");
     if (root == NULL) {
         return false; // Error al cargar los libros
     }
-
     cJSON *libroObj;
     cJSON_ArrayForEach(libroObj, root) {
         int id = cJSON_GetObjectItemCaseSensitive(libroObj, "id")->valueint;
@@ -146,7 +132,6 @@ bool actualizarCantidadYVerificarEstado(int bookId) {
     cJSON_Delete(root);
     return false; // El libro no se encontró en la lista
 }
-
 
 // Función para verificar si un usuario existe en la lista de usuarios por cédula
 bool existeUsuarioPorCedula(const cJSON *usuarios, const char *cedula) {
@@ -524,6 +509,7 @@ void marcarEjemplarDisponible(int bookId) {
 void eliminarPrestamoPorId(int loanId) {
     cJSON *root = cargarPrestamosDesdeArchivo("../data/prestamos.json");
     if (root == NULL) {
+        printf("aaaa");
         return; // Error al cargar los préstamos
     }
 
@@ -545,7 +531,9 @@ void eliminarPrestamoPorId(int loanId) {
 
     // Guardar la lista actualizada de préstamos en el archivo JSON
     guardarPrestamosEnArchivo("../data/prestamos.json", root);
+    printf("ha");
     cJSON_Delete(root);
+    printf("llllllllllllllllllll");
 }
 
 // Función para verificar si un préstamo está vencido o próximo a vencer

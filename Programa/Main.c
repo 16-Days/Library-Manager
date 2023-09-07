@@ -38,6 +38,7 @@ void loanHistory() {
 
 void dueLoans() {
     // Implementación para mostrar préstamos vencidos o próximos a vencer
+    
 }
 
 void showStatistics() {
@@ -116,6 +117,7 @@ void borrowBook() {
 
 void returnBook() {
     // Implementación para devolver un ejemplar
+    devolverEjemplar();
 }
 
 int main() {
