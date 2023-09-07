@@ -3,12 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 #include "cJSON.h"
-#include "manageUsers.h"
+//#include "manageUsers.h"
 #include <time.h>
-
-// Declaración de funciones externas definidas en otros archivos
-cJSON *cargarLibrosDesdeArchivo(const char *archivo);
-void marcarEjemplarNoDisponible(int bookId);
 
 // Estructura para representar un préstamo
 struct Loan {
@@ -21,11 +17,44 @@ struct Loan {
 
 
 
+// Declaración de funciones externas definidas en otros archivos
+cJSON *cargarLibrosDesdeArchivo(const char *archivo);
+void marcarEjemplarNoDisponible(int bookId);
+// En prestamo.h (o en un archivo de encabezado separado)
+void agregarPrestamoAPrestamosJson(const struct Loan *loan);
+// En prestamo.h (o en un archivo de encabezado separado)
+void realizarDevolucionEjemplar(int loanId, const char *returnDate);
+// En prestamo.h (o en un archivo de encabezado separado)
+cJSON *buscarPrestamoPorId(int loanId);
+// En prestamo.h (o en un archivo de encabezado separado)
+float calcularMontoACancelar(const cJSON *prestamoObj, const char *returnDate);
+// En prestamo.h (o en un archivo de encabezado separado)
+void eliminarPrestamoPorId(int loanId);
+
+// Declaración de funciones
+void guardarLastLoanId();
+void cargarLastLoanId();
+
+
+
+
+
+
 // Variable global para llevar un seguimiento del último loanId utilizado
 static int lastLoanId = 0;
 
 // Ruta al archivo de configuración para almacenar lastLoanId
 const char *configFilePath = "../data/config.txt";
+
+// Función para guardar el último loanId en un archivo de configuración
+void guardarLastLoanId() {
+    FILE *configFile = fopen(configFilePath, "w");
+    if (configFile != NULL) {
+        fprintf(configFile, "%d", lastLoanId);
+        fclose(configFile);
+    }
+}
+
 
 // Función para cargar el último loanId desde un archivo de configuración
 void cargarLastLoanId() {
@@ -40,14 +69,6 @@ void cargarLastLoanId() {
     }
 }
 
-// Función para guardar el último loanId en un archivo de configuración
-void guardarLastLoanId() {
-    FILE *configFile = fopen(configFilePath, "w");
-    if (configFile != NULL) {
-        fprintf(configFile, "%d", lastLoanId);
-        fclose(configFile);
-    }
-}
 
 // Función para obtener el próximo ID de préstamo disponible
 int obtenerProximoLoanId() {
